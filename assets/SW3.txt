@@ -1,0 +1,82 @@
+host SW3
+ip domain name chandrahas.com
+
+clock timezone IST 5 30
+ntp server 1.1.1.1 prefer
+ntp server 2.2.2.2 
+
+vtp version 2
+vtp domain cisco
+vtp mode transparent
+vtp password vtp123
+
+vlan 300
+name SERVERS
+vlan 400
+name MANAGEMENT
+exit
+
+
+int range e0/2-3,e1/0-1
+switchport mode access
+switchport access vlan 300
+exit
+
+int range e0/0,e1/3
+channel-group 1 mode on
+int po1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk nonegotiate
+switchport trunk allowed vlan 300
+exit
+
+int range e0/1,e1/2
+channel-group 2 mode on
+int po2
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk nonegotiate
+switchport trunk allowed vlan 300,400
+exit
+
+spanning-tree mode rapid-pvst
+spanning-tree portfast default
+
+int range e0/2-3,e1/0-1
+switchport port-security violation restrict
+switchport port-security mac-address sticky
+exit
+
+
+
+int vlan 400
+ip add 172.16.4.13 255.255.255.0
+no shut
+exit
+ip default-gateway 172.16.4.254
+
+
+enable secret pass123
+username admin secret test123
+crypto key generate rsa
+2048
+
+access-list 10 permit 172.16.2.0 0.0.0.63
+ip ssh version 2
+line vty 0 4
+login local
+transport input ssh
+access-class 10 in
+exit
+
+exit
+terminal monitor
+config t
+
+logging monitor debugging
+logging host 172.16.2.66
+logging trap debugging
+
+
+

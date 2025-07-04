@@ -1,0 +1,50 @@
+
+host R2
+
+clock timezone IST 5 30
+ntp server 1.1.1.1 prefer
+ntp server 2.2.2.2 
+
+int e1/1
+ip add 10.4.4.1 255.255.255.252
+description TO_L3SW1
+no shut
+
+int e1/0
+ip add 10.2.2.1 255.255.255.252
+description TO_L3SW2
+no shut
+
+int e1/2
+ip add 124.110.21.5 255.255.255.128
+description TO_ISP1
+no shut
+exit
+
+router ospf 1
+network 10.4.4.1 0.0.0.0 area 0
+network 10.2.2.1 0.0.0.0 area 0
+network 124.110.21.5 0.0.0.0 area 0
+end
+
+terminal monitor
+config t
+
+access-list 10 permit 172.16.2.0 0.0.0.63
+ip ssh version 2
+line vty 0 4
+login local
+transport input ssh
+access-class 10 in
+exit
+
+logging monitor debugging
+logging host 172.16.2.66
+logging trap debugging
+
+
+snmp-server community zabbix ro
+snmp-server location EVE_NG_LAB
+snmp-server host 172.16.2.4 version 2c zabbix
+snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps config

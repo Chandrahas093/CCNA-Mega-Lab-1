@@ -1,0 +1,39 @@
+host ISP2
+
+int l0
+ip add 2.2.2.2 255.255.255.255
+exit
+
+clock timezone IST 5 30
+ntp server time.google.com
+ntp master 4
+ntp source loopback0
+
+int e0/0
+ip add 124.110.21.1 255.255.255.128
+ip nat inside
+no shut
+
+int e0/1
+ip add dhcp
+ip nat outside
+no shut
+exit
+
+access-list 1 permit any
+
+ip nat inside source list 1 interface e0/1 overload
+
+router ospf 1
+network 124.110.21.1 0.0.0.0 area 0
+network 2.2.2.2 0.0.0.0 area 0
+default-information originate
+exit
+
+snmp-server community zabbix ro
+snmp-server location EVE_NG_LAB
+snmp-server host 172.16.2.4 version 2c zabbix
+snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps config
+
+

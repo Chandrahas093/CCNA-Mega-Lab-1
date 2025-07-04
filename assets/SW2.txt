@@ -1,0 +1,71 @@
+host SW2
+ip domain name chandrahas.com
+
+clock timezone IST 5 30
+ntp server 1.1.1.1 prefer
+ntp server 2.2.2.2 
+
+vtp version 2
+vtp domain cisco
+vtp mode client
+vtp password vtp123
+
+
+int range e1/0-2
+switchport mode access
+switchport access vlan 100
+
+int range e0/2-3,e1/3
+switchport mode access
+swithcport access vlan 200
+exit
+
+int range e0/0-1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk nonegotiate
+switchport trunk allowed vlan 100,200,400
+
+spanning-tree mode rapid-pvst
+spanning-tree portfast default
+
+int range e1/0-3,e0/2-3
+switchport port-security mac-address sticky
+
+int vlan 400
+ip add 172.16.4.12 255.255.255.0
+no shut
+exit
+ip default-gateway 172.16.4.254
+
+
+enable secret pass123
+username admin secret test123
+crypto key generate rsa
+2048
+
+access-list 10 permit 172.16.2.0 0.0.0.63
+ip ssh version 2
+line vty 0 4
+login local
+transport input ssh
+access-class 10 in
+exit
+
+exit
+terminal monitor
+config t
+
+logging monitor debugging
+logging host 172.16.2.66
+logging trap debugging
+
+ip dhcp snooping
+ip dhcp snooping vlan 100
+ip dhcp snooping vlan 200
+no ip dhcp snooping information option
+
+int range e0/0-1
+ip dhcp snooping trust
+exit
+
