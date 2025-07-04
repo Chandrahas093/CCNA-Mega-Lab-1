@@ -1,7 +1,7 @@
 # Comprehensice CCNA Enterprise Lab 
 
 ## Overview
-Successfully designed, built, and managed a complete enterprise network topology from the ground up in the **EVE-NG** simulation environment, validating a wide range of networking skills.
+This lab demonstrates the practical implementation of an enterprise-grade network infrastructure in **EVE-NG**, incorporating key CCNA-level technologies and protocols. It includes VLAN segmentation, inter-VLAN routing, dynamic routing using OSPF, HSRP-based redundancy, static Etherchannel, NAT (PAT), port security, DHCP and DHCP snooping, access control via ACLs, SSH access, Syslog, NTP synchronization, and SNMP monitoring with Zabbix.
 
 ![Network Topology](assets/network-topology.png)
 
