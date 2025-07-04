@@ -1,4 +1,4 @@
-# CCNA Mega Lab 1
+# Comprehensice CCNA Enterprise Lab 
 
 ## Overview
 Successfully designed, built, and managed a complete enterprise network topology from the ground up in the **EVE-NG** simulation environment, validating a wide range of networking skills.
